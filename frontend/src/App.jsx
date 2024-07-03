@@ -4,6 +4,8 @@ import { store } from './store';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProtectedPage from './pages/ProtectedPage';
+import HomePage from './pages/HomePage';
+import Header from './components/Header';
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useSelector((state) => state.auth);
@@ -15,7 +17,9 @@ function App() {
   return (
     <Provider store={store}>
       <Router>
+        <Header />
         <Routes>
+          <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route
