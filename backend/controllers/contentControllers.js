@@ -1,38 +1,27 @@
-const Content = require('../models/contentModel');
+const ContentService = require('../services/contentServices');
 
 class ContentController {
   static async createContent(req, res) {
     try {
-      const { label, type_id, description, rating, rating_id } = req.body;
-      const newContent = await Content.create({
-        label,
-        type_id,
-        description,
-        rating,
-        rating_id,
-        user_id: req.user.userId
-      });
+      const userId = req.user.userId;
+      const contentData = req.body;
+      if (req.file) {
+        contentData.path = req.file.path;
+      }
+      const newContent = await ContentService.createContent(contentData, userId);
       res.status(201).json(newContent);
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при создании контента', error: error.message });
     }
   }
 
-
   static async getContent(req, res, searchParams) {
     try {
-      const { page = 1, limit = 10 } = req.query;
-      const offset = (page - 1) * limit;
-      const orderParams = searchParams ? [[searchParams, 'DESC']] : [['upload_date', 'DESC']];
-      const contents = await Content.findAndCountAll({
-        order: orderParams,
-        offset,
-        limit: parseInt(limit, 10),
-      });
-
-      res.json(contents.rows);
+      const { page = 1, limit = 10} = req.query;
+      const getContent = await ContentService.getContent({ page, limit}, searchParams);
+      res.status(200).json(getContent);
     } catch (error) {
-      res.status(500).json({ error: 'Ошибка при получении контента' });
+      res.status(500).json({ message: 'Ошибка при получении контента', error: error.message });
     }
   }
 }

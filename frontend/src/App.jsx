@@ -3,7 +3,7 @@ import { Provider, useSelector } from 'react-redux';
 import { store } from './store';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import ProtectedPage from './pages/ProtectedPage';
+import CreateContentPage from './pages/CreateContentPage';
 import HomePage from './pages/HomePage';
 import Header from './components/Header';
 
@@ -26,7 +26,7 @@ function App() {
             path="/protected"
             element={
               <ProtectedRoute>
-                <ProtectedPage />
+                <CreateContentPage />
               </ProtectedRoute>
             }
           />

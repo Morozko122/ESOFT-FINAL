@@ -1,5 +1,4 @@
 const UserService = require('../services/userServices');
-const authenticateToken = require('../middleware/middleware-jwt');
 
 class UserController {
     static async createUser(req, res) {
@@ -20,8 +19,6 @@ class UserController {
         }
     }
     static async createContent(req, res) {
-        console.log(authenticateToken);
-
         try {
             const userId = req.user.userId;
             const contentData = req.body;

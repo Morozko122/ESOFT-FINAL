@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Button, Box, Typography } from '@mui/material';
+import { TextField, Button, Box, Typography, Input } from '@mui/material';
 import { createContent } from '../store/contentSlice';
 
 const CreateContentForm = () => {
@@ -12,7 +12,12 @@ const CreateContentForm = () => {
   const [description, setDescription] = useState('');
   const [rating, setRating] = useState('');
   const [ratingId, setRatingId] = useState('');
+  const [mediaFile, setMediaFile] = useState(null);
   const [error, setError] = useState(null);
+
+  const handleFileChange = (e) => {
+    setMediaFile(e.target.files[0]);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,15 +26,17 @@ const CreateContentForm = () => {
       return;
     }
 
-    const contentData = {
-      label,
-      type_id: parseInt(typeId),
-      description,
-      rating: parseFloat(rating),
-      rating_id: parseInt(ratingId)
-    };
+    const formData = new FormData();
+    formData.append('label', label);
+    formData.append('type_id', parseInt(typeId));
+    formData.append('description', description);
+    formData.append('rating', parseFloat(rating));
+    formData.append('rating_id', parseInt(ratingId));
+    if (mediaFile) {
+      formData.append('mediaFile', mediaFile);
+    }
 
-    dispatch(createContent({ contentData, token }))
+    dispatch(createContent({ formData, token }))
       .unwrap()
       .then(() => {
         setLabel('');
@@ -37,6 +44,7 @@ const CreateContentForm = () => {
         setDescription('');
         setRating('');
         setRatingId('');
+        setMediaFile(null);
         setError(null);
       })
       .catch((err) => {
@@ -51,6 +59,7 @@ const CreateContentForm = () => {
       <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
       <TextField label="Rating" value={rating} onChange={(e) => setRating(e.target.value)} required />
       <TextField label="Age Rating ID" value={ratingId} onChange={(e) => setRatingId(e.target.value)} required />
+      <Input type="file" onChange={handleFileChange} />
       {error && <Typography color="error">{error}</Typography>}
       <Button type="submit" variant="contained" color="primary">Create Content</Button>
     </Box>

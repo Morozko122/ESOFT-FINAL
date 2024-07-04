@@ -1,9 +1,11 @@
 import React from 'react';
 import { AppBar, Toolbar, IconButton, Typography, InputBase, Button, Menu, MenuItem, Box, Avatar } from '@mui/material';
-import { Search as SearchIcon, AccountCircle } from '@mui/icons-material';
+import { Search as SearchIcon} from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { styled, alpha } from '@mui/material/styles';
-
+import {useDispatch } from 'react-redux';
+import { logout } from '../store/authSlice';
+import { useNavigate } from 'react-router-dom';
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
@@ -45,7 +47,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -53,7 +56,10 @@ const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/login');
+  };
   return (
     <AppBar position="static">
       <Toolbar>
@@ -101,7 +107,7 @@ const Header = () => {
             onClose={handleClose}
           >
             <MenuItem onClick={handleClose} component={Link} to="/profile">Профиль</MenuItem>
-            <MenuItem onClick={handleClose} component={Link} to="/logout">Выйти</MenuItem>
+            <MenuItem onClick={handleLogout}>Выйти</MenuItem>
           </Menu>
           <Button component={Link} to="/create-content" variant="contained" color="secondary">
             СОЗДАТЬ МЕМ

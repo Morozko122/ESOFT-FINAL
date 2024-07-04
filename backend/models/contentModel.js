@@ -30,6 +30,10 @@ const Content = sequelize.define('Content', {
         type: DataTypes.SMALLINT,
         allowNull: false
     },
+    path: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
     upload_date: {
         type: DataTypes.TIME,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), 
