@@ -54,14 +54,14 @@ const CreateContentForm = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <TextField label="Label" value={label} onChange={(e) => setLabel(e.target.value)} required />
-      <TextField label="Type ID" value={typeId} onChange={(e) => setTypeId(e.target.value)} required />
-      <TextField label="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
-      <TextField label="Rating" value={rating} onChange={(e) => setRating(e.target.value)} required />
-      <TextField label="Age Rating ID" value={ratingId} onChange={(e) => setRatingId(e.target.value)} required />
+      <TextField label="Название" value={label} onChange={(e) => setLabel(e.target.value)} required />
+      <TextField label="Тип ID" value={typeId} onChange={(e) => setTypeId(e.target.value)} required />
+      <TextField label="Описание" value={description} onChange={(e) => setDescription(e.target.value)} />
+      <TextField label="Рейтинг" value={rating} onChange={(e) => setRating(e.target.value)} required />
+      <TextField label="Возрастной рейтинг ID" value={ratingId} onChange={(e) => setRatingId(e.target.value)} required />
       <Input type="file" onChange={handleFileChange} />
       {error && <Typography color="error">{error}</Typography>}
-      <Button type="submit" variant="contained" color="primary">Create Content</Button>
+      <Button type="submit" variant="contained" color="primary">Создать</Button>
     </Box>
   );
 };

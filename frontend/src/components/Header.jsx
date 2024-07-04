@@ -64,7 +64,7 @@ const Header = () => {
     <AppBar position="static">
       <Toolbar>
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-          <Link to="/my-content" style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography variant="h6" noWrap>
               #Я_ПОКА_ХЗ
             </Typography>
@@ -109,7 +109,7 @@ const Header = () => {
             <MenuItem onClick={handleClose} component={Link} to="/profile">Профиль</MenuItem>
             <MenuItem onClick={handleLogout}>Выйти</MenuItem>
           </Menu>
-          <Button component={Link} to="/create-content" variant="contained" color="secondary">
+          <Button component={Link} to="/create" variant="contained" color="secondary">
             СОЗДАТЬ МЕМ
           </Button>
         </Box>
