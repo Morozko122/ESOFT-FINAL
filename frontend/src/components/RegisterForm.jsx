@@ -16,10 +16,10 @@ const RegisterForm = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <TextField label="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
-      <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-      <Button type="submit" variant="contained" color="primary">Register</Button>
+      <TextField label="Имя пользователя (username)" value={username} onChange={(e) => setUsername(e.target.value)} required />
+      <TextField label="Почта" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <TextField label="Пароль" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <Button type="submit" variant="contained" color="primary">Зарегистрироваться</Button>
     </Box>
   );
 };

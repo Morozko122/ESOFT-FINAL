@@ -13,7 +13,7 @@ const LoginForm = () => {
 
   useEffect(() => {
     if (token) {
-      navigate('/protected');
+      navigate('/');
     }
   }, [token, navigate]);
 
@@ -24,10 +24,10 @@ const LoginForm = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-      <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+      <TextField label="Почта" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <TextField label="Пароль" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       {status === 'failed' && <Typography color="error">{error}</Typography>}
-      <Button type="submit" variant="contained" color="primary">Login</Button>
+      <Button type="submit" variant="contained" color="primary">Войти</Button>
     </Box>
   );
 };

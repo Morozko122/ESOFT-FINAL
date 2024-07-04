@@ -66,7 +66,7 @@ const Header = () => {
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography variant="h6" noWrap>
-              #Я_ПОКА_ХЗ
+              ПОКА НЕ ЗНАЮ
             </Typography>
           </Link>
           <Search>
