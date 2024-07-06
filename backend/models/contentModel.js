@@ -24,6 +24,7 @@ const Content = sequelize.define('Content', {
     },
     rating: {
         type: DataTypes.REAL,
+        defaultValue: 0, 
         allowNull: false
     },
     rating_id: {
