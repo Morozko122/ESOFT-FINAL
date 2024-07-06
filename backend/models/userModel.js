@@ -29,7 +29,7 @@ const User = sequelize.define('User', {
     timestamps: false
 });
 User.beforeCreate(async (user) => {
-    const saltRounds = 10; // Количество итераций для хеширования
+    const saltRounds = 10;
     user.password = await bcrypt.hash(user.password, saltRounds); 
   });
 

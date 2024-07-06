@@ -4,7 +4,8 @@ const authenticateToken = require('../middleware/middleware-jwt');
 const ContentController = require('../controllers/contentControllers');
 const upload = require('../config/multer');
 
-router.post('/create', authenticateToken, upload.single('mediaFile'), ContentController.createContent);
+const mediaUpload = upload.fields([{ name: 'mediaFile', maxCount: 1 }, { name: 'previewFile', maxCount: 1 }]);
+router.post('/create', authenticateToken, mediaUpload, ContentController.createContent);
 router.get('/get', (req, res) => {
      ContentController.getContent(req, res, req.query.sortBy);
 });

@@ -5,10 +5,8 @@ class ContentController {
     try {
       const userId = req.user.userId;
       const contentData = req.body;
-      if (req.file) {
-        contentData.path = req.file.path;
-      }
-      const newContent = await ContentService.createContent(contentData, userId);
+      const mediaFile = req.files['mediaFile'][0];
+      const newContent = await ContentService.createContent(contentData, userId, mediaFile);
       res.status(201).json(newContent);
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при создании контента', error: error.message });

@@ -3,18 +3,6 @@ import axios from 'axios';
 
 const API_URL = 'http://localhost:3000/api/content';
 
-// export const createContent = createAsyncThunk('content/create', async ({ contentData, token }, { rejectWithValue }) => {
-//   try {
-//     const response = await axios.post(`${API_URL}/create`, contentData, {
-//       headers: {
-//         Authorization: `Bearer ${token}`
-//       }
-//     });
-//     return response.data;
-//   } catch (error) {
-//     return rejectWithValue(error.response.data);
-//   }
-// });
 export const createContent = createAsyncThunk(
   'content/createContent',
   async ({ formData, token }, thunkAPI) => {

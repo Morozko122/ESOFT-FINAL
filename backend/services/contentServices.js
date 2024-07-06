@@ -1,8 +1,24 @@
 const Content = require('../models/contentModel');
-
+const mimeTypeToTypeId = {
+  'image/jpeg': 1, 
+  'image/png': 1, 
+  'video/mp4': 2, 
+  'video/x-msvideo': 2 
+};
 class ContentService {
-  static async createContent(contentData, userId) {
+  static async createContent(contentData, userId, mediaFile) {
     try {
+      if (mediaFile) {
+        contentData.path = mediaFile.filename;
+        
+        console.log(contentData.path);
+
+        const typeId = mimeTypeToTypeId[mediaFile.mimetype];
+        if (!typeId) {
+          throw new Error('Unsupported file type');
+        }
+        contentData.type_id = typeId;
+      }
       const content = await Content.create({
         ...contentData,
         user_id: userId,
