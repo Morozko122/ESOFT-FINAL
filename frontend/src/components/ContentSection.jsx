@@ -22,7 +22,7 @@ const ContentCarousel = ({ title, url, sortBy }) => {
         const response = await axios.get(`${url}?page=${page}&sortBy=${sortBy}`);
         if (Array.isArray(response.data.rows)) {
           setContent(prevContent => [...prevContent, ...response.data.rows]);
-          setHasMore(response.data.length > 0);
+          setHasMore(response.data.rows.length > 0);
         } else {
           throw new Error('Unexpected response data format');
         }
@@ -69,7 +69,7 @@ const ContentCarousel = ({ title, url, sortBy }) => {
       <h2>{title}</h2>
       <Slider {...settings}>
         {content.map(item => (
-          <ContentCard content={item} />
+          <ContentCard key={item.content_id} content={item} />
         ))}
       </Slider>
       {loading && <div>Loading more...</div>}
