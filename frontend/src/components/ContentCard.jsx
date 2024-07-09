@@ -1,13 +1,20 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, Typography, Box } from '@mui/material';
 
 const ContentCard = ({ content }) => {
   const [hover, setHover] = useState(false);
+  const navigate = useNavigate();
+  const handleClick = () => {
+    navigate(`/content/${content.content_id}`);
+  };
 
   return (
+
     <Card
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      onClick={handleClick}
       sx={{
         width: 200,
         height: 200,
@@ -19,7 +26,8 @@ const ContentCard = ({ content }) => {
         justifyContent: 'center',
         backgroundImage: `url(${content.previewUrl})`,
         backgroundSize: 'cover',
-        backgroundPosition: 'center'
+        backgroundPosition: 'center',
+        cursor: 'pointer'
       }}
     >
       {!hover ? (

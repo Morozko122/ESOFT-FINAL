@@ -47,8 +47,8 @@ const ContentCarousel = ({ title, url, sortBy }) => {
     dots: true,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 4,
+    slidesToShow: 5,
+    slidesToScroll: 5,
     afterChange: (currentSlide) => {
       if (currentSlide + 4 >= content.length) {
         loadMore();

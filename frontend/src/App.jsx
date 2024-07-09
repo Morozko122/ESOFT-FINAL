@@ -6,12 +6,15 @@ import RegisterPage from './pages/RegisterPage';
 import CreateContentPage from './pages/CreateContentPage';
 import HomePage from './pages/HomePage';
 import Header from './components/Header';
-
+import ContentList from './components/ContentCardList';
+import ContentListPage from './pages/ContentListPage';
+import DetailedViewPage from './pages/DetailedViewPage';
 const ProtectedRoute = ({ children }) => {
   const { token } = useSelector((state) => state.auth);
 
   return token ? children : <Navigate to="/login" />;
 };
+const API_BASE_URl = "http://localhost:3000/api";
 
 function App() {
   return (
@@ -22,6 +25,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/content" element={<ContentListPage url = {API_BASE_URl}/>} />
+          <Route path="/content/:id" element={<DetailedViewPage url = {API_BASE_URl}/>} />
           <Route
             path="/create"
             element={
