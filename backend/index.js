@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const sequelize = require('./config/database');
 const userRoutes = require('./routes/userRoutes');
 const contentRoutes = require('./routes/contentRoutes');
+const playlistRoutes = require('./routes/playlistRoutes')
 const cors = require('cors')
 const app = express();
 const path = require('path');
@@ -12,6 +13,7 @@ app.use(cors())
 app.use(bodyParser.json());
 app.use('/api', userRoutes);
 app.use('/api/content', contentRoutes);
+app.use('/api/playlists', playlistRoutes);
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 sequelize.sync()
     .then(() => {
