@@ -2,23 +2,73 @@ const Playlist = require('../models/playlistModel');
 const PlaylistContent = require('../models/playlistContentModel');
 const UserPlaylist = require('../models/userPlaylistModel');
 const User = require('../models/userModel');
+const Content = require('../models/contentModel');
 
 class PlaylistService {
+  // static async createPlaylist(label, creatorId) {
+  //   const transaction = await Playlist.sequelize.transaction();
+  //   try {
+  //     const playlist = await Playlist.create({ label, creator_id: creatorId }, { transaction });
+  //     const userPlaylist = await UserPlaylist.create({ UserUserId: creatorId, PlaylistPlaylistId: playlist.playlist_id }, { transaction });
+  //     await transaction.commit();
+  //     return userPlaylist;
+  //   } catch (error) {
+  //     await transaction.rollback();
+  //     throw error;
+  //   }
+  // }
   static async createPlaylist(label, creatorId) {
-    // try {
-    //   const playlist = await Playlist.create({ label, creator_id: creatorId });
-    //   return playlist;
-    // } catch (error) {
-    //   throw error;
-    // }
     const transaction = await Playlist.sequelize.transaction();
     try {
       const playlist = await Playlist.create({ label, creator_id: creatorId }, { transaction });
-      await UserPlaylist.create({ UserUserId: creatorId, PlaylistPlaylistId: playlist.playlist_id }, { transaction });
+      const userPlaylist = await UserPlaylist.create({ UserUserId: creatorId, PlaylistPlaylistId: playlist.playlist_id }, { transaction });
       await transaction.commit();
-      return playlist;
+      return {
+        id: userPlaylist.id,
+        UserUserId: userPlaylist.UserUserId,
+        PlaylistPlaylistId: userPlaylist.PlaylistPlaylistId,
+        Playlist: {
+          playlist_id: playlist.playlist_id,
+          label: playlist.label,
+          creator_id: playlist.creator_id,
+          favorite_count: playlist.favorite_count
+        }
+      };
     } catch (error) {
       await transaction.rollback();
+      throw error;
+    }
+  }
+
+  static async deletePlaylist(playlistId, userId) {
+    const transaction = await Playlist.sequelize.transaction();
+    try {
+      const playlist = await Playlist.findByPk(playlistId);
+      if (!playlist) {
+        throw new Error('Плейлист не найден');
+      }
+      if (playlist.creator_id !== userId) {
+        throw new Error('Пользователь не является создателем плейлиста');
+      }
+      await UserPlaylist.destroy({ where: { PlaylistPlaylistId: playlistId } }, { transaction });
+      await playlist.destroy({ transaction });
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw error;
+    }
+  }
+
+  static async removeContentFromPlaylist(playlistId, contentId) {
+    try {
+      const result = await PlaylistContent.destroy({
+        where: {
+          PlaylistPlaylistId: playlistId,
+          ContentContentId: contentId
+        }
+      });
+      return result;
+    } catch (error) {
       throw error;
     }
   }
@@ -34,21 +84,38 @@ class PlaylistService {
 
   static async getUserPlaylists(userId) {
     try {
-      const playlists = await Playlist.findAll({
-        where: { creator_id: userId },
+      const userPlaylists = await UserPlaylist.findAll({
+        where: { UserUserId: userId },
         include: [
           {
-            model: User,
-            where: { user_id: userId },
-            through: { model: UserPlaylist, where: { UserUserId: userId }}
+            model: Playlist
           }
         ]
       });
-      return playlists;
+
+      return userPlaylists;
     } catch (error) {
       throw error;
     }
   }
+
+  static async getPlaylistContent(playlistId) {
+    try {
+      const playlistContent = await PlaylistContent.findAll({
+        where: { PlaylistPlaylistId: playlistId },
+        include: [
+          {
+            model: Content
+          }
+        ]
+      });
+
+      return playlistContent.map(pc => pc.Content);
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 module.exports = PlaylistService;

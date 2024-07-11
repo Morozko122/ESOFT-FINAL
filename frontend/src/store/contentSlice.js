@@ -7,7 +7,6 @@ export const createContent = createAsyncThunk(
   'content/createContent',
   async ({ formData, token }, thunkAPI) => {
     try {
-      {console.log(formData)};
       const response = await axios.post(`${API_URL}/create`, formData, {
         
         headers: {
