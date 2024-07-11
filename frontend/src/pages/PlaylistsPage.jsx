@@ -4,7 +4,7 @@ import { Container, Box } from '@mui/material';
 
 const PlaylistsPage = ({ url }) => {
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="lg">
             <Box sx={{ mt: 8 }}>
                 <PlaylistManager url={url} />
             </Box>

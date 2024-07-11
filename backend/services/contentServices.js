@@ -2,6 +2,8 @@ const Content = require('../models/contentModel');
 const User = require('../models/userModel');
 const AgeRating = require('../models/ageRatingModel');
 const ContentType = require('../models/contentTypeModel');
+const path = require('path');
+const fs = require('fs');
 const mimeTypeToTypeId = {
   'image/jpeg': 1, 
   'image/png': 1, 
@@ -47,37 +49,92 @@ class ContentService {
     }
   }
   
-  // static async getContentById(contentId, protocol, host) {
-  //   try {
-  //     const content = await Content.findByPk(contentId, {
-  //       include: [
-  //         { model: User, attributes: ['username'] },
-  //         { model: AgeRating, attributes: ['age'] },
-  //         { model: ContentType, attributes: ['label'] }
-  //       ]
-  //     });
-  //     if (!content) {
-  //       throw new Error('Content not found');
-  //     }
+  static async getUserContent(userId) {
+    try {
+      const content = await Content.findAll({
+        where: { user_id: userId },
+        include: [
+          { model: User, attributes: ['username'] },
+          { model: AgeRating, attributes: ['age'] },
+          { model: ContentType, attributes: ['label'] }
+        ]
+      });
+      return content;
+    } catch (error) {
+      throw error;
+    }
+  }
 
-  //     const baseUrl = `${protocol}://${host}`;
-  //     const mediaUrl = content.type_id === 1 
-  //       ? `${baseUrl}/uploads/pictures/${content.path}` 
-  //       : content.type_id === 2 
-  //       ? `${baseUrl}/uploads/videos/${content.path}` 
-  //       : `${baseUrl}/uploads/others/${content.path}`;
+  static async updateContent(contentId, userId, contentData, mediaFile) {
+    try {
+      const content = await Content.findOne({ where: { content_id: contentId, user_id: userId } });
+      if (!content) {
+        throw new Error('Content not found or not owned by user');
+      }
 
-  //     return {
-  //       ...content.toJSON(),
-  //       username: content.User ? content.User.username : null,
-  //       age: content.AgeRating ? content.AgeRating.age : null,
-  //       typeLabel: content.ContentType ? content.ContentType.label : null,
-  //       mediaUrl
-  //     };
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // }
+      if (mediaFile) {
+        contentData.path = mediaFile.filename;
+        const typeId = mimeTypeToTypeId[mediaFile.mimetype];
+        if (!typeId) {
+          throw new Error('Unsupported file type');
+        }
+        contentData.type_id = typeId;
+      }
+
+      await this.deleteFiles(content.path, content.preview_path);
+
+      await content.update(contentData);
+      return content;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async deleteContent(contentId, userId) {
+    try {
+      const content = await Content.findOne({ where: { content_id: contentId, user_id: userId },
+        include: [
+          { model: ContentType, attributes: ['label'] }
+        ]
+      });
+      if (!content) {
+        throw new Error('Content not found or not owned by user');
+      }
+
+      await this.deleteFiles(content.ContentType.label, content.path);
+
+      await content.destroy();
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async deleteFiles(contentType, filePath) {
+    try {
+      const mediaUrl = contentType === "Image" 
+      ? `/pictures/${filePath}` 
+      : contentType === "Video"
+      ? `/videos/${filePath}` 
+      : `/others/${filePath}`;
+      console.log(mediaUrl);
+      const previewUrl = `/previews/${filePath.replace(path.extname(filePath), '_preview' + path.extname(filePath) + '.png')}`;
+      console.log(previewUrl);
+      if (mediaUrl) {
+        const fullMediaPath = path.join(__dirname, '../uploads', mediaUrl);
+        if (fs.existsSync(fullMediaPath)) {
+          fs.unlinkSync(fullMediaPath);
+        }
+      }
+      if (previewUrl) {
+        const fullPreviewPath = path.join(__dirname, '../uploads', previewUrl);
+        if (fs.existsSync(fullPreviewPath)) {
+          fs.unlinkSync(fullPreviewPath);
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
   static async getContentById(contentId, protocol, host) {
     try {
       const content = await Content.findByPk(contentId, {
@@ -92,7 +149,7 @@ class ContentService {
       if (!content) {
         throw new Error('Content not found');
       }
-      console.log(content.ContentType.label);
+
       const baseUrl = `${protocol}://${host}`;
       const mediaUrl = content.ContentType.label === "Image" 
         ? `${baseUrl}/uploads/pictures/${content.path}` 

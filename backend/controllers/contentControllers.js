@@ -79,6 +79,42 @@ class ContentController {
       res.status(500).json({ message: 'Ошибка при получении контента', error: error.message });
     }
   }
+
+  static async getUserContent(req, res) {
+    try {
+      const userId = req.user.userId;
+      const content = await ContentService.getUserContent(userId);
+      res.status(200).json(content);
+    } catch (error) {
+      res.status(500).json({ message: 'Ошибка при получении контента пользователя', error: error.message });
+    }
+  }
+
+  static async updateContent(req, res) {
+    try {
+      const contentId = req.params.id;
+      const userId = req.user.userId;
+      const contentData = req.body;
+      const mediaFile = req.files['mediaFile'] ? req.files['mediaFile'][0] : null;
+      const updatedContent = await ContentService.updateContent(contentId, userId, contentData, mediaFile);
+      res.status(200).json(updatedContent);
+    } catch (error) {
+      res.status(500).json({ message: 'Ошибка при обновлении контента', error: error.message });
+    }
+  }
+
+  static async deleteContent(req, res) {
+    try {
+      const contentId = req.params.id;
+      const userId = req.user.userId;
+
+      await ContentService.deleteContent(contentId, userId);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: 'Ошибка при удалении контента', error: error.message });
+    }
+  }
+
   static async getContentById(req, res) {
     try {
       const contentId = req.params.id;

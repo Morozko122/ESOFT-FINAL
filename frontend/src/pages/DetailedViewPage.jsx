@@ -7,7 +7,7 @@ const DetailedViewPage = ({ url }) => {
     const { id } = useParams();
     console.log(id);
     return (
-        <Container maxWidth="sm">
+        <Container maxWidth="md">
             <Box sx={{ mt: 8 }}>
                 <ContentDetails id={id} url={url} />
             </Box>
