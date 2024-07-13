@@ -49,17 +49,23 @@ class ContentService {
     }
   }
   
-  static async getUserContent(userId) {
+  static async getUserContent(userId, protocol, host) {
     try {
+
       const content = await Content.findAll({
-        where: { user_id: userId },
-        include: [
-          { model: User, attributes: ['username'] },
-          { model: AgeRating, attributes: ['age'] },
-          { model: ContentType, attributes: ['label'] }
-        ]
+        attributes: ['content_id', 'label', 'description', 'favorite_count', 'rating', 'path'],
+        where: { user_id: userId }
       });
-      return content;
+      const baseUrl = `${protocol}://${host}`;
+      const modifiedContent = content.map(item => {
+        const originalPathWithoutExt = path.basename(item.path, path.extname(item.path));
+        const previewPath = `${baseUrl}/uploads/previews/${originalPathWithoutExt}_preview.png`;
+        return {
+          ...item.toJSON(),
+          previewPath
+        };
+      });
+      return modifiedContent;
     } catch (error) {
       throw error;
     }

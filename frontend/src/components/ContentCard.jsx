@@ -7,9 +7,6 @@ import AuthModal from './AuthModal';
 const ContentCard = ({ content }) => {
   const [hover, setHover] = useState(false);
   const navigate = useNavigate();
-  // const handleClick = () => {
-  //   navigate(`/content/${content.content_id}`);
-  // };
   const [openModal, setOpenModal] = useState(false);
   const { token } = useSelector((state) => state.auth);
 

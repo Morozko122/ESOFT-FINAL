@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-import { Box, Button, List, ListItem, ListItemText, Typography } from '@mui/material';
-
+import { Box, Grid, Typography } from '@mui/material';
+import MyContentCard from './MyContentListCard';
+import ContentCard from './ContentCard';
 const UserContent = ({ url }) => {
   const [content, setContent] = useState([]);
   const { token } = useSelector((state) => state.auth);
@@ -39,17 +40,12 @@ const UserContent = ({ url }) => {
 
   return (
     <Box>
-      <Typography variant="h4">Your Content</Typography>
-      <List>
+      <Typography variant="h4">Мой контент</Typography>
         {content.map((item) => (
-          <ListItem key={item.content_id}>
-            <ListItemText primary={item.label} secondary={item.description} />
-            <Button variant="outlined" color="secondary" onClick={() => handleDeleteContent(item.content_id)}>
-              Delete
-            </Button>
-          </ListItem>
+          <Grid item key={item.content_id}>
+            <MyContentCard content={item} />
+          </Grid>
         ))}
-      </List>
     </Box>
   );
 };

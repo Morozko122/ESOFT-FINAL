@@ -1,22 +1,10 @@
 const Playlist = require('../models/playlistModel');
 const PlaylistContent = require('../models/playlistContentModel');
 const UserPlaylist = require('../models/userPlaylistModel');
-const User = require('../models/userModel');
 const Content = require('../models/contentModel');
 
 class PlaylistService {
-  // static async createPlaylist(label, creatorId) {
-  //   const transaction = await Playlist.sequelize.transaction();
-  //   try {
-  //     const playlist = await Playlist.create({ label, creator_id: creatorId }, { transaction });
-  //     const userPlaylist = await UserPlaylist.create({ UserUserId: creatorId, PlaylistPlaylistId: playlist.playlist_id }, { transaction });
-  //     await transaction.commit();
-  //     return userPlaylist;
-  //   } catch (error) {
-  //     await transaction.rollback();
-  //     throw error;
-  //   }
-  // }
+
   static async createPlaylist(label, creatorId) {
     const transaction = await Playlist.sequelize.transaction();
     try {
