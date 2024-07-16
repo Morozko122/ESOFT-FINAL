@@ -71,10 +71,10 @@ import { Box, Grid, MenuItem, Select, CircularProgress } from '@mui/material';
 import ContentCard from './ContentCard';
 import axios from 'axios';
 
-const ContentList = ({url}) => {
+const ContentList = ({url, initialSortBy, initialOrder}) => {
   const [contents, setContents] = useState([]);
-  const [sortOrder, setSortOrder] = useState('favorite_count');
-  const [order, setOrder] = useState('DESC');
+  const [sortOrder, setSortOrder] = useState(initialSortBy);
+  const [order, setOrder] = useState(initialOrder);
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
