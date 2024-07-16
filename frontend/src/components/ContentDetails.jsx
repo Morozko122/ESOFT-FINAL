@@ -171,35 +171,33 @@ const ContentDetails = ({id, url}) => {
           {content.description}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Created by: {content.username}
+          Создатель: {content.username}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Age Rating: {content.age}
+          Возрастной рейтинг: {content.age}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Type: {content.typeLabel}
+          Тип: {content.typeLabel}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Favorites: {content.favorite_count}
+          В избранном: {content.favorite_count}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Rating: {content.rating}
+          Рейтинг: {content.rating}
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          Uploaded on: {content.upload_date}
+          Создано: {content.upload_date}
         </Typography>
         <Button variant="outlined" onClick={handleClickOpen}>
-            Add to Playlist
+            Добавить в плейлист
           </Button>
           <Dialog open={open} onClose={handleClose}>
-            <DialogTitle>Select a Playlist</DialogTitle>
+            <DialogTitle>Выберите плейлист</DialogTitle>
             <DialogContent>
               <List>
                 {playlists.map((playlist) => (
-                  
                   <ListItem button key={playlist.Playlist.playlist_id} onClick={() => handleAddToPlaylist(playlist.Playlist.playlist_id)}>
                     <ListItemText primary={playlist.Playlist.label} />
-                    {console.log(playlist.Playlist)}
                   </ListItem>
                 ))}
               </List>
