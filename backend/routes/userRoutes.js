@@ -5,9 +5,5 @@ const authenticateToken = require('../middleware/middleware-jwt');
 
 router.post('/users', UserController.createUser);
 router.post('/login', UserController.loginUser);
-router.get('/protected', authenticateToken, (req, res) => {
-    res.json({ message: 'Protected route', user: req.user }); 
-});
-router.post('/create', authenticateToken, UserController.createContent);
-
+router.post('/refresh', UserController.refreshToken);
 module.exports = router;

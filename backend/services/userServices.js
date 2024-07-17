@@ -18,8 +18,10 @@ class UserService {
                 throw new Error('Неверный логин или пароль');
             }
             const token = jwt.sign({ userId: user.user_id }, 'your_secret_key', { expiresIn: '1h' });
+            const refreshToken = jwt.sign({ userId: user.user_id }, 'your_refresh_secret_key', { expiresIn: '7d' });
             return {
                 token,
+                refreshToken,
                 user: {
                     userId: user.user_id,
                     username: user.username,
@@ -29,15 +31,13 @@ class UserService {
             throw error;
         }
     }
-    static async createContent(userData, userId) {
+    static async refreshToken(refreshToken) {
         try {
-            const content = await Content.create({
-                ...userData,
-                user_id: userId
-            });
-            return content;
+            const decoded = jwt.verify(refreshToken, 'your_refresh_secret_key');
+            const token = jwt.sign({ userId: decoded.userId }, 'your_secret_key', { expiresIn: '1h' });
+            return { token };
         } catch (error) {
-            throw error;
+            throw new Error('Invalid refresh token');
         }
     }
 }

@@ -18,14 +18,13 @@ class UserController {
             res.status(401).json({ message: error.message });
         }
     }
-    static async createContent(req, res) {
+    static async refreshToken(req, res) {
         try {
-            const userId = req.user.userId;
-            const contentData = req.body;
-            const newContent = await UserService.createContent(contentData, userId);
-            res.status(201).json(newContent); 
+            const refreshToken = req.body.refreshToken;
+            const newToken = await UserService.refreshToken(refreshToken);
+            res.json(newToken);
         } catch (error) {
-            res.status(500).json({ message: error.message });
+            res.status(401).json({ message: error.message });
         }
     }
 }
