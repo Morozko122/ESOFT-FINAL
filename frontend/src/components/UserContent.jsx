@@ -3,7 +3,6 @@ import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { Box, Grid, Typography } from '@mui/material';
 import MyContentCard from './MyContentListCard';
-import ContentCard from './ContentCard';
 const UserContent = ({ url }) => {
   const [content, setContent] = useState([]);
   const { token } = useSelector((state) => state.auth);
@@ -21,7 +20,7 @@ const UserContent = ({ url }) => {
       });
       setContent(response.data);
     } catch (error) {
-      console.error('Error fetching user content:', error);
+      console.error('Ошибка получения контента:', error);
     }
   };
 
@@ -34,7 +33,7 @@ const UserContent = ({ url }) => {
       });
       fetchUserContent();
     } catch (error) {
-      console.error('Error deleting content:', error);
+      console.error('Ошибка удаления контента:', error);
     }
   };
 
@@ -43,7 +42,7 @@ const UserContent = ({ url }) => {
       <Typography variant="h4">Мой контент</Typography>
         {content.map((item) => (
           <Grid item key={item.content_id}>
-            <MyContentCard content={item} />
+            <MyContentCard content={item} handleDeleteContent={handleDeleteContent}/>
           </Grid>
         ))}
     </Box>

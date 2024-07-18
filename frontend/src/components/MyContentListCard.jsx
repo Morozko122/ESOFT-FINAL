@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import CardActions from '@mui/material/CardActions';
 import Box from '@mui/material/Box';
 
-const MyContentCard = ({ content }) => {
+const MyContentCard = ({ content, handleDeleteContent }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -42,7 +42,7 @@ const MyContentCard = ({ content }) => {
         </CardContent>
         <CardActions sx={{ paddingLeft: 2 }}>
           <Button size="small" variant="outlined">Редактировать</Button>
-          <Button size="small" variant="outlined" color="error">Удалить</Button>
+          <Button size="small" variant="outlined" color="error" onClick={handleDeleteContent}>Удалить</Button>
         </CardActions>
       </Box>
     </Card>

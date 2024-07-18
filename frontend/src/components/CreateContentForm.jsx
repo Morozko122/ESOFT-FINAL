@@ -174,7 +174,7 @@
 // export default CreateContentForm;
 import React, { useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { createContent } from '../store/contentSlice';
 import FormInputs from './CreateFormInputs';
 import MediaPreview from './MediaPreview';

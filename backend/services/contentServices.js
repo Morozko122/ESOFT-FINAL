@@ -74,7 +74,7 @@ class ContentService {
   async deleteContent(contentId, userId) {
     try {
       const content = await this.contentModel.deleteContent(contentId, userId);
-      await this.deleteFiles(content.content.ContentType.label, content.path);
+      await this.deleteFiles(content.ContentType.label, content.path);
       await content.destroy();
     } catch (error) {
       throw error;
