@@ -1,19 +1,44 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./config/database');
-const userRoutes = require('./routes/userRoutes');
-const contentRoutes = require('./routes/contentRoutes');
-const playlistRoutes = require('./routes/playlistRoutes')
+
+
+
 const cors = require('cors')
 const app = express();
 const path = require('path');
 const PORT = 3000;
 
+
+const PlaylistModel = require('./models/playlistModel')
+const UserModel = require('./models/userModel')
+const ContentModel = require('./models/contentModel')
+
+const PlaylistService = require('./services/playlistServices')
+const UserService = require('./services/userServices')
+const ContentService = require('./services/contentServices')
+
+const PlaylistController = require('./controllers/playlistControllers')
+const UserController = require('./controllers/userControllers')
+const ContentController = require('./controllers/contentControllers')
+
+const createPlaylistRouter = require('./routes/playlistRoutes')
+const userRoutes = require('./routes/userRoutes');
+const contentRoutes = require('./routes/contentRoutes');
+
+const playlistService = new PlaylistService(PlaylistModel);
+const userService = new UserService(UserModel);
+const contentService = new ContentService(ContentModel);
+
+const playlistController = new PlaylistController(playlistService);
+const userController = new UserController(userService);
+const contentController = new ContentController(contentService);
+
 app.use(cors())
 app.use(bodyParser.json());
-app.use('/api', userRoutes);
-app.use('/api/content', contentRoutes);
-app.use('/api/playlists', playlistRoutes);
+app.use('/api', userRoutes(userController));
+app.use('/api/content', contentRoutes(contentController));
+app.use('/api/playlists', createPlaylistRouter(playlistController));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 sequelize.sync()
     .then(() => {

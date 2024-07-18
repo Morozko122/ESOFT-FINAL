@@ -1,35 +1,30 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const User = require('../dbmodels/userModel');
 const bcrypt = require('bcrypt');
-const User = sequelize.define('User', {
-    user_id: {
-        type: DataTypes.UUID,
-        defaultValue: Sequelize.UUIDV4,
-        primaryKey: true
-    },
-    username: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    avatar: {
-        type: DataTypes.STRING,
-        allowNull: true
+class UserModel {
+    static async createUser(userData) {
+        try {
+            const user = await User.create(userData);
+            return user;
+        } catch (error) {
+            throw error;
+        }
     }
-}, {
-    tableName: 'user',
-    timestamps: false
-});
-User.beforeCreate(async (user) => {
-    const saltRounds = 10;
-    user.password = await bcrypt.hash(user.password, saltRounds); 
-});
-module.exports = User;
+    static async loginUser(userData) {
+        try {
+            const user = await User.findOne({ where: { email: userData.email } });
+            if (!user || !(await bcrypt.compare(userData.password, user.password))) {
+                throw new Error('Неверный логин или пароль');
+            }
+            return {
+              user: {
+                userId: user.user_id,
+                username: user.username,
+            }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+module.exports = UserModel;

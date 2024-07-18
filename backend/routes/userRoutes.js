@@ -1,9 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const UserController = require('../controllers/userControllers');
-const authenticateToken = require('../middleware/middleware-jwt');
 
-router.post('/users', UserController.createUser);
-router.post('/login', UserController.loginUser);
-router.post('/refresh', UserController.refreshToken);
-module.exports = router;
+function createUserRouter(userController) {
+    const router = express.Router();
+    router.post('/users', userController.createUser);
+    router.post('/login', userController.loginUser);
+    router.post('/refresh', userController.refreshToken);
+    return router;
+}
+module.exports = createUserRouter;

@@ -11,7 +11,7 @@ import DetailedViewPage from './pages/DetailedViewPage';
 import PlaylistsPage from './pages/PlaylistsPage';
 import UserContentPage from './pages/UserContentPage';
 import ProtectedRoute from './components/ProtectedRoute';
-
+import EditContentPage from './pages/EditContentPage';
 const API_BASE_URL = "http://localhost:3000/api";
 
 function App() {
@@ -52,6 +52,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CreateContentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/content/:id/edit/"
+            element={
+              <ProtectedRoute>
+                <EditContentPage />
               </ProtectedRoute>
             }
           />

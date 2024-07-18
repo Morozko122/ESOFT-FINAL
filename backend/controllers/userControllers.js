@@ -1,27 +1,29 @@
-const UserService = require('../services/userServices');
-
 class UserController {
-    static async createUser(req, res) {
+    constructor(userService) {
+        this.userService = userService;
+      }
+    createUser = async (req, res) => {
         try {
-            const user = await UserService.createUser(req.body);
+            const userData = req.body;
+            const user = await this.userService.createUser(userData);
             res.status(201).json(user);
         } catch (error) {
             res.status(500).json({ message: error.message });
         }
     }
-    static async loginUser(req, res) {
+    loginUser = async (req, res) => {
         try {
             const userData = req.body;
-            const token = await UserService.loginUser(userData);
+            const token = await this.userService.loginUser(userData);
             res.json(token); 
         } catch (error) {
             res.status(401).json({ message: error.message });
         }
     }
-    static async refreshToken(req, res) {
+    refreshToken = async (req, res) => {
         try {
             const refreshToken = req.body.refreshToken;
-            const newToken = await UserService.refreshToken(refreshToken);
+            const newToken = await this.userService.refreshToken(refreshToken);
             res.json(newToken);
         } catch (error) {
             res.status(401).json({ message: error.message });

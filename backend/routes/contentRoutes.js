@@ -1,30 +1,19 @@
-// const express = require('express');
-// const router = express.Router();
-// const authenticateToken = require('../middleware/middleware-jwt');
-// const ContentController = require('../controllers/contentControllers');
-// const upload = require('../config/multer');
-
-// const mediaUpload = upload.fields([{ name: 'mediaFile', maxCount: 1 }, { name: 'previewFile', maxCount: 1 }]);
-// router.post('/create', authenticateToken, mediaUpload, ContentController.createContent);
-// router.get('/get', (req, res) => {
-//      ContentController.getContent(req, res, req.query.sortBy, req.query.order);
-// });
-// router.get('/get/:id', authenticateToken, ContentController.getContentById);
-// module.exports = router;
 const express = require('express');
-const router = express.Router();
 const authenticateToken = require('../middleware/middleware-jwt');
-const ContentController = require('../controllers/contentControllers');
 const upload = require('../config/multer');
 
-const mediaUpload = upload.fields([{ name: 'mediaFile', maxCount: 1 }, { name: 'previewFile', maxCount: 1 }]);
-router.post('/create', authenticateToken, mediaUpload, ContentController.createContent);
-router.get('/get', (req, res) => {
-     ContentController.getContent(req, res, req.query.sortBy, req.query.order);
-});
-router.get('/get/:id', authenticateToken, ContentController.getContentById);
-router.get('/user', authenticateToken, ContentController.getUserContent);
-router.put('/update/:id', authenticateToken, mediaUpload, ContentController.updateContent);
-router.delete('/delete/:id', authenticateToken, ContentController.deleteContent);
+function createPlaylistRouter(contentController) {
+     const router = express.Router();
+     const mediaUpload = upload.fields([{ name: 'mediaFile', maxCount: 1 }, { name: 'previewFile', maxCount: 1 }]);
+     router.post('/create', authenticateToken, mediaUpload, contentController.createContent);
+     router.get('/get', (req, res) => {
+          contentController.getContent(req, res, req.query.sortBy, req.query.order);
+     });
+     router.get('/get/:id', authenticateToken, contentController.getContentById);
+     router.get('/user', authenticateToken, contentController.getUserContent);
+     router.put('/update/:id', authenticateToken, mediaUpload, contentController.updateContent);
+     router.delete('/delete/:id', authenticateToken, contentController.deleteContent);
+     return router;
+}
 
-module.exports = router;
+module.exports = createPlaylistRouter;

@@ -1,62 +1,64 @@
-const PlaylistService = require('../services/playlistServices');
-
 class PlaylistController {
-  static async createPlaylist(req, res) {
+  constructor(playlistService) {
+    this.playlistService = playlistService;
+  }
+  createPlaylist = async (req, res) => {
     try {
       const { label } = req.body;
       const creatorId = req.user.userId;
-      const playlist = await PlaylistService.createPlaylist(label, creatorId);
+      console.log(creatorId);
+      const playlist = await this.playlistService.createPlaylist(label, creatorId);
       res.status(201).json(playlist);
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при создании плейлиста', error: error.message });
     }
   }
-  
-  static async deletePlaylist(req, res) {
+
+  deletePlaylist = async (req, res) => {
     try {
       const { playlistId } = req.params;
       const userId = req.user.userId;
-      await PlaylistService.deletePlaylist(playlistId, userId);
+      await this.playlistService.deletePlaylist(playlistId, userId);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при удалении плейлиста', error: error.message });
     }
   }
 
-  static async removeContentFromPlaylist(req, res) {
+  removeContentFromPlaylist = async (req, res) => {
     try {
       const { playlistId, contentId } = req.params;
-      await PlaylistService.removeContentFromPlaylist(playlistId, contentId);
+      await this.playlistService.removeContentFromPlaylist(playlistId, contentId);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при удалении контента из плейлиста', error: error.message });
     }
   }
 
-  static async addContentToPlaylist(req, res) {
+  addContentToPlaylist = async (req, res) => {
     try {
       const { playlistId, contentId } = req.body;
-      const playlistContent = await PlaylistService.addContentToPlaylist(playlistId, contentId);
+      const playlistContent = await this.playlistService.addContentToPlaylist(playlistId, contentId);
       res.status(201).json(playlistContent);
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при добавлении контента в плейлист', error: error.message });
     }
   }
 
-  static async getUserPlaylists(req, res) {
+  getUserPlaylists = async (req, res) => {
     try {
       const userId = req.user.userId;
-      const playlists = await PlaylistService.getUserPlaylists(userId);
+      const playlists = await this.playlistService.getUserPlaylists(userId);
       res.status(200).json(playlists);
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при получении плейлистов пользователя', error: error.message });
     }
   }
 
-  static async getPlaylistContent(req, res) {
+  getPlaylistContent = async (req, res) => {
     try {
       const { playlistId } = req.params;
-      const content = await PlaylistService.getPlaylistContent(playlistId);
+      const content = await this.playlistService.getPlaylistContent(playlistId);
       res.status(200).json(content);
     } catch (error) {
       res.status(500).json({ message: 'Ошибка при получении контента плейлиста', error: error.message });

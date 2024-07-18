@@ -1,126 +1,120 @@
-// const { Sequelize, DataTypes } = require('sequelize');
-// const sequelize = require('../config/database');
-
-// const Content = sequelize.define('Content', {
-//     content_id: {
-//         type: DataTypes.UUID,
-//         defaultValue: Sequelize.UUIDV4,
-//         primaryKey: true
-//     },
-//     label: {
-//         type: DataTypes.STRING,
-//         allowNull: false
-//     },
-//     type_id: {
-//         type: DataTypes.SMALLINT,
-//         allowNull: false
-//     },
-//     description: {
-//         type: DataTypes.STRING
-//     },
-//     favorite_count: {
-//         type: DataTypes.INTEGER,
-//         defaultValue: 0
-//     },
-//     rating: {
-//         type: DataTypes.REAL,
-//         defaultValue: 0, 
-//         allowNull: false
-//     },
-//     rating_id: {
-//         type: DataTypes.SMALLINT,
-//         allowNull: false
-//     },
-//     path: {
-//         type: DataTypes.STRING,
-//         allowNull: true,
-//       },
-//     upload_date: {
-//         type: DataTypes.TIME,
-//         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'), 
-//         allowNull: false
-//     },
-//     user_id: {
-//         type: DataTypes.UUID,
-//         references: {
-//             model: 'user',
-//             key: 'user_id'
-//         }
-//     }
-// }, {
-//     tableName: 'content',
-//     timestamps: false
-// });
-
-// module.exports = Content;
-// models/contentModel.js
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-const User = require('./userModel');
-const AgeRating = require('./ageRatingModel');
-const ContentType = require('./contentTypeModel');
-
-const Content = sequelize.define('Content', {
-  content_id: {
-    type: DataTypes.UUID,
-    defaultValue: Sequelize.UUIDV4,
-    primaryKey: true
-  },
-  label: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  type_id: {
-    type: DataTypes.SMALLINT,
-    allowNull: false,
-    references: {
-      model: ContentType,
-      key: 'type_id'
+const Content = require('../dbmodels/contentModel');
+const User = require('../dbmodels/userModel');
+const AgeRating = require('../dbmodels/ageRatingModel');
+const ContentType = require('../dbmodels/contentTypeModel');
+const path = require('path');
+const fs = require('fs');
+class ContentModel {
+    static async createContent(contentData, userId) {
+        try {
+            const content = await Content.create({
+                ...contentData,
+                user_id: userId,
+            });
+            return content;
+        } catch (error) {
+            throw error;
+        }
     }
-  },
-  description: {
-    type: DataTypes.STRING
-  },
-  favorite_count: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0
-  },
-  rating: {
-    type: DataTypes.REAL,
-    defaultValue: 0,
-    allowNull: false
-  },
-  rating_id: {
-    type: DataTypes.SMALLINT,
-    allowNull: false,
-    references: {
-      model: AgeRating,
-      key: 'rating_id'
-    }
-  },
-  path: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
-  upload_date: {
-    type: DataTypes.TIME,
-    defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-    allowNull: false
-  },
-  user_id: {
-    type: DataTypes.UUID,
-    references: {
-      model: User,
-      key: 'user_id'
-    }
-  }
-}, {
-  tableName: 'content',
-  timestamps: false
-});
 
-Content.belongsTo(User, { foreignKey: 'user_id' });
-Content.belongsTo(AgeRating, { foreignKey: 'rating_id' });
-Content.belongsTo(ContentType, { foreignKey: 'type_id' });
+    static async getContent(orderParams, offset, limit) {
+        try {
+            const contents = await Content.findAndCountAll({
+                order: orderParams,
+                offset,
+                limit: parseInt(limit, 10)
+            });
+            return contents;
+        } catch (error) {
+            throw error;
+        }
+    }
 
-module.exports = Content;
+    static async getUserContent(userId) {
+        try {
+            const content = await Content.findAll({
+                attributes: ['content_id', 'label', 'description', 'favorite_count', 'rating', 'path'],
+                where: { user_id: userId }
+            });
+            return content;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async updateContent(contentId, userId, contentData) {
+        try {
+            const content = await Content.findOne({
+                where: { content_id: contentId, user_id: userId },
+                include: [
+                    { model: ContentType, attributes: ['label'] }
+                ]
+            });
+            if (!content) {
+                throw new Error('Content not found or not owned by user');
+            }
+            const originalPath = path.basename(content.path, path.extname(content.path));
+            const previewPath = `${originalPath}_preview.png`;
+            await content.update(contentData);
+            return {
+                content,
+                originalPath,
+                previewPath
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async deleteContent(contentId, userId) {
+        try {
+            const content = await Content.findOne({
+                where: { content_id: contentId, user_id: userId },
+                include: [
+                    { model: ContentType, attributes: ['label'] }
+                ]
+            });
+            if (!content) {
+                throw new Error('Content not found or not owned by user');
+            }
+            return content;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    static async getContentById(contentId) {
+        try {
+
+            const content = await Content.findByPk(contentId, {
+                attributes: ['content_id', 'label', 'description', 'favorite_count', 'rating', 'upload_date', 'user_id', 'path'],
+                include: [
+                    { model: User, attributes: ['username'] },
+                    { model: AgeRating, attributes: ['age'] },
+                    { model: ContentType, attributes: ['label'] }
+                ]
+            });
+
+            if (!content) {
+                throw new Error('Content not found');
+            }
+            return {
+                content_id: content.content_id,
+                label: content.label,
+                description: content.description,
+                favorite_count: content.favorite_count,
+                rating: content.rating,
+                upload_date: content.upload_date,
+                user_id: content.user_id,
+                path: content.path,
+                username: content.User ? content.User.username : null,
+                age: content.AgeRating ? content.AgeRating.age : null,
+                typeLabel: content.ContentType ? content.ContentType.label : null
+            };
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
+module.exports = ContentModel;
