@@ -102,7 +102,57 @@ class PlaylistModel {
       throw error;
     }
   }
+  static async subscribeToPlaylist(userId, playlistId) {
+    try {
+      const creatorId = await Playlist.findByPk(playlistId, {
+        attributes: ['creator_id']
+      });
+      if (userId === creatorId) {
+        throw new Error('Пользователь не может подписаться на свой собственный плейлист');
+      }
+      const subscription = await UserPlaylist.create({
+        UserUserId: userId,
+        PlaylistPlaylistId: playlistId,
+        subscribed: true
+      });
+      return subscription;
+    } catch (error) {
+      throw error;
+    }
+  }
+  static async unsubscribeFromPlaylist(userId, playlistId) {
+    const subscription = await UserPlaylist.findOne({
+      where: {
+        UserUserId: userId,
+        PlaylistPlaylistId: playlistId,
+        subscribed: true
+      }
+    });
 
+    if (!subscription) {
+      throw new Error('Подписка не найдена');
+    }
+
+    await subscription.destroy();
+  }
+  static async getUserSubscriptions(userId) {
+    const subscriptions = await UserPlaylist.findAll({
+      where: {
+        UserUserId: userId,
+        subscribed: true
+      },
+      include: [
+        {
+          model: Playlist
+        }
+      ]
+    });
+    if (!subscriptions) {
+      throw new Error('Список подписок пуст');
+    }
+
+    return subscriptions;
+  }
 }
 
 module.exports = PlaylistModel;

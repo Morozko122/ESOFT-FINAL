@@ -30,7 +30,7 @@ const Header = () => {
         <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
           <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
             <Typography variant="h6" noWrap>
-              ПОКА НЕ ЗНАЮ
+              МемоХаб
             </Typography>
           </Link>
         </Box>

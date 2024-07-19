@@ -25,6 +25,9 @@ class UserService {
             throw new Error('Invalid refresh token');
         }
     }
+    async getUserProfile(userId) {
+        return await this.userModel.findUser(userId);
+    }
 }
 
 module.exports = UserService;

@@ -11,6 +11,7 @@ function createPlaylistRouter(contentController) {
      });
      router.get('/get/:id', authenticateToken, contentController.getContentById);
      router.get('/user', authenticateToken, contentController.getUserContent);
+     router.get('/user/:id', authenticateToken, contentController.getUserContentById);
      router.put('/update/:id', authenticateToken, mediaUpload, contentController.updateContent);
      router.delete('/delete/:id', authenticateToken, contentController.deleteContent);
      return router;

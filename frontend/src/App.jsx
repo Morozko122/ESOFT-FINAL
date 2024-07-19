@@ -12,6 +12,8 @@ import PlaylistsPage from './pages/PlaylistsPage';
 import UserContentPage from './pages/UserContentPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import EditContentPage from './pages/EditContentPage';
+import UserProfilePage from './pages/UserProfilePage';
+import CurrentProfilePage from './pages/CurrentProfilePage';
 const API_BASE_URL = "http://localhost:3000/api";
 
 function App() {
@@ -60,6 +62,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <EditContentPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/:userId"
+            element={
+              <ProtectedRoute>
+                <UserProfilePage url={API_BASE_URL} />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <CurrentProfilePage url={API_BASE_URL} />
               </ProtectedRoute>
             }
           />

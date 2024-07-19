@@ -8,6 +8,10 @@ const UserPlaylist = sequelize.define('UserPlaylist', {
     type: DataTypes.UUID,
     defaultValue: Sequelize.UUIDV4,
     primaryKey: true
+  },
+  subscribed: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
 }, {
   tableName: 'user-playlists',

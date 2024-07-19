@@ -49,7 +49,15 @@ class ContentController {
       res.status(500).json({ message: 'Ошибка при получении контента пользователя', error: error.message });
     }
   }
-
+  getUserContentById = async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const content = await this.contentService.getUserContent(userId, req.protocol, req.get('host'));
+      res.status(200).json(content);
+    } catch (error) {
+      res.status(500).json({ message: 'Ошибка при получении контента пользователя', error: error.message });
+    }
+  }
   updateContent = async (req, res) => {
     try {
       const contentId = req.params.id;

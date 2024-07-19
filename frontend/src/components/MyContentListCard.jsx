@@ -12,9 +12,12 @@ const MyContentCard = ({ content, handleDeleteContent }) => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-      navigate(`/content/${content.content_id}`);
-};
+    navigate(`/content/${content.content_id}`);
 
+  };
+  const handleEditClick = () => {
+    navigate(`/content/${content.content_id}/edit`);
+  };
   return (
     <Card sx={{ display: 'flex', marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
       <CardMedia
@@ -25,10 +28,10 @@ const MyContentCard = ({ content, handleDeleteContent }) => {
       />
       <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
         <CardContent sx={{ flex: '1 0 auto' }}>
-          <Typography 
-            component="div" 
-            variant="h5" 
-            sx={{ cursor: 'pointer', textDecoration: 'underline' }} 
+          <Typography
+            component="div"
+            variant="h5"
+            sx={{ cursor: 'pointer', textDecoration: 'underline' }}
             onClick={handleCardClick}
           >
             {content.label}
@@ -41,7 +44,7 @@ const MyContentCard = ({ content, handleDeleteContent }) => {
           </Typography>
         </CardContent>
         <CardActions sx={{ paddingLeft: 2 }}>
-          <Button size="small" variant="outlined">Редактировать</Button>
+          <Button size="small" variant="outlined" onClick={handleEditClick}>Редактировать</Button>
           <Button size="small" variant="outlined" color="error" onClick={handleDeleteContent}>Удалить</Button>
         </CardActions>
       </Box>

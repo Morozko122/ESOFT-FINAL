@@ -26,5 +26,17 @@ class PlaylistService {
   async getPlaylistContent(playlistId) {
     return await this.playlistModel.getPlaylistContent(playlistId);
   }
+
+  async subscribeToPlaylist(userId, playlistId){
+    return await this.playlistModel.subscribeToPlaylist(userId, playlistId);
+  }
+
+  async unsubscribeFromPlaylist(userId, playlistId){
+    return await this.playlistModel.unsubscribeFromPlaylist(userId, playlistId);
+  }
+  
+  async getUserSubscriptions(userId){
+    return await this.playlistModel.getUserSubscriptions(userId);
+  }
 }
 module.exports = PlaylistService;

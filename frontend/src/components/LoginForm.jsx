@@ -24,7 +24,7 @@ const LoginForm = () => {
 
   return (
     <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <TextField label="Почта" value={email} onChange={(e) => setEmail(e.target.value)} required />
+      <TextField label="Почта" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
       <TextField label="Пароль" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
       {status === 'failed' && <Typography color="error">{error}</Typography>}
       <Button type="submit" variant="contained" color="primary">Войти</Button>

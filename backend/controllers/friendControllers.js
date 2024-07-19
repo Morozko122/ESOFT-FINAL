@@ -25,11 +25,21 @@ class FriendController {
 
     getFriends = async (req, res) => {
         try {
-            const { userId } = req.params;
+            const { userId } = req.params;  
             const friends = await this.friendService.getFriends(userId);
             res.status(200).json(friends);
         } catch (error) {
             res.status(500).json({ message: error.message });
+        }
+    }
+    checkFriend = async (req, res) => {
+        try {
+          const userId = req.params.userId;
+          const { currentUserId } = req.query;
+          const user = await this.friendService.checkFriend(userId, currentUserId);
+          res.status(200).json(user);
+        } catch (error) {
+          res.status(500).json({ message: 'Ошибка при получении пользователя', error: error.message });
         }
     }
 }

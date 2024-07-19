@@ -43,12 +43,29 @@ class UserModel {
                     attributes: ['user_id', 'username']
                 }]
             });
-            console.log(user)
             if (!user) {
                 throw new Error('Пользователь не найден');
             }
 
             return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+    static async checkFriend(userId, currentUserId) {
+        try {
+            const isFriend = await Friend.findOne({
+                where: {
+                    user_id: currentUserId,
+                    friend_id: userId
+                }
+            });
+            console.log(isFriend);
+            if (!isFriend) {
+                throw new Error('Пользователь не найден');
+            }
+
+            return { isFriend: !!isFriend };
         } catch (error) {
             throw error;
         }
