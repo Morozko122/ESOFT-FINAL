@@ -14,8 +14,6 @@ const UserPlaylist = sequelize.define('UserPlaylist', {
   timestamps: false
 });
 
-// User.belongsToMany(Playlist, { through: UserPlaylist, foreignKey: 'UserUserId', otherKey: 'PlaylistPlaylistId' });
-// Playlist.belongsToMany(User, { through: UserPlaylist, foreignKey: 'PlaylistPlaylistId', otherKey: 'UserUserId' });
 UserPlaylist.belongsTo(User, { foreignKey: 'UserUserId' });
 UserPlaylist.belongsTo(Playlist, { foreignKey: 'PlaylistPlaylistId' });
 module.exports = UserPlaylist;

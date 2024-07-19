@@ -25,6 +25,22 @@ class UserModel {
             throw error;
         }
     }
+    static async findUser(userId){
+        try {
+            const user = await User.findByPk(userId);
+            if (!user ) {
+                throw new Error('Пользователь не найден');
+            }
+            return {
+              user: {
+                userId: user.user_id,
+                username: user.username,
+            }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = UserModel;
