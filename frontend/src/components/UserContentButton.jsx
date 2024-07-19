@@ -9,11 +9,7 @@ const StyledButton = styled(Button)({
   alignItems: 'center',
   justifyContent: 'space-between',
   padding: '8px 16px',
-  borderRadius: '20px',
-  backgroundColor: '#007bff',
-  '&:hover': {
-    backgroundColor: '#0056b3',
-  },
+  borderRadius: '4px',
 });
 
 const StyledModal = styled(Modal)({
@@ -65,9 +61,9 @@ const UserContentButton = ({ userId, url, token }) => {
 
   return (
     <>
-      <StyledButton variant="contained" onClick={handleOpen}>
+      <StyledButton variant="contained" color='secondary' onClick={handleOpen} sx={{marginBottom:1}}>
         <span>Контент пользователя</span>
-        <span>🎥🎞️</span>
+        <span>🎥</span>
       </StyledButton>
       <StyledModal
         open={open}

@@ -73,7 +73,7 @@ class PlaylistModel {
   static async getUserPlaylists(userId) {
     try {
       const userPlaylists = await UserPlaylist.findAll({
-        where: { UserUserId: userId },
+        where: { UserUserId: userId, subscribed:false },
         include: [
           {
             model: Playlist

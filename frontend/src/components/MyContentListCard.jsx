@@ -45,7 +45,7 @@ const MyContentCard = ({ content, handleDeleteContent }) => {
         </CardContent>
         <CardActions sx={{ paddingLeft: 2 }}>
           <Button size="small" variant="outlined" onClick={handleEditClick}>Редактировать</Button>
-          <Button size="small" variant="outlined" color="error" onClick={handleDeleteContent}>Удалить</Button>
+          <Button size="small" variant="outlined" color="error" onClick={()=>handleDeleteContent(content.content_id)}>Удалить</Button>
         </CardActions>
       </Box>
     </Card>

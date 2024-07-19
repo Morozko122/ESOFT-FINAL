@@ -28,6 +28,10 @@ class UserService {
     async getUserProfile(userId) {
         return await this.userModel.findUser(userId);
     }
+
+    async getUserByUsername(username) {
+        return await this.userModel.findUserByUsername(username);
+    }
 }
 
 module.exports = UserService;

@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, List, ListItem, ListItemText, Card, CardContent, Typography } from '@mui/material';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Card, CardContent, Typography, CardActions, Divider } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 const PlaylistManager = ({ url }) => {
   const [playlists, setPlaylists] = useState([]);
-  const [newPlaylistName, setNewPlaylistName] = useState(null);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [newPlaylistName, setNewPlaylistName] = useState('');
   const [open, setOpen] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
   const [playlistContent, setPlaylistContent] = useState([]);
+  const [sub, setSub] = useState(false);
   const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
     fetchPlaylists();
+    fetchSubscriptions();
   }, []);
 
   const fetchPlaylists = async () => {
@@ -29,9 +32,22 @@ const PlaylistManager = ({ url }) => {
     }
   };
 
+  const fetchSubscriptions = async () => {
+    try {
+      const response = await axios.get(`${url}/playlists/subscriptions`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setSubscriptions(response.data);
+    } catch (error) {
+      console.error('Error fetching subscriptions:', error);
+    }
+  };
+
   const handleCreatePlaylist = async () => {
     if (newPlaylistName.trim() === '') {
-      setError('Название плейлиста не может быть пустым');
+      console.error('Название плейлиста не может быть пустым');
       return;
     }
     try {
@@ -59,7 +75,7 @@ const PlaylistManager = ({ url }) => {
     setOpen(false);
   };
 
-  const handlePlaylistClick = async (playlist) => {
+  const handlePlaylistClick = async (playlist, sub) => {
     setSelectedPlaylist(playlist);
     try {
       const response = await axios.get(`${url}/playlists/content/${playlist.Playlist.playlist_id}`, {
@@ -67,7 +83,8 @@ const PlaylistManager = ({ url }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setPlaylistContent(response.data);
+      setPlaylistContent(response.data)
+      setSub(sub);
     } catch (error) {
       console.error('Error fetching playlist content:', error);
     }
@@ -99,9 +116,23 @@ const PlaylistManager = ({ url }) => {
     }
   };
 
+  const handleUnsubscribe = async (playlistId) => {
+    try {
+      await axios.delete(`${url}/playlists/unsubscribe/${playlistId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      setSubscriptions(subscriptions.filter(subscription => subscription.Playlist.playlist_id !== playlistId));
+    } catch (error) {
+      console.error('Error unsubscribing from playlist:', error);
+    }
+  };
+
   return (
     <Box sx={{ padding: 2 }}>
-      <Button variant="contained" onClick={handleClickOpen} sx={{ marginBottom: 2 }}>
+      <Typography variant="h4" marginBottom={'10px'}>Мои плейлисты</Typography>
+      <Button variant="outlined" onClick={handleClickOpen} sx={{ marginBottom: 2 }}>
         Создать плейлист
       </Button>
       <Dialog open={open} onClose={handleClose}>
@@ -124,40 +155,61 @@ const PlaylistManager = ({ url }) => {
           <Button onClick={handleCreatePlaylist}>Создать</Button>
         </DialogActions>
       </Dialog>
-      <List>
-        {playlists.map((playlist) => (
-          <ListItem key={playlist.Playlist.playlist_id} sx={{ marginBottom: 2 }}>
-            <Card sx={{ width: '100%' }}>
-              <CardContent>
-                <Typography variant="h5" component="div" sx={{ marginBottom: 1 }}>
-                  {playlist.Playlist.label}
-                </Typography>
-                <Button variant="contained" onClick={() => handlePlaylistClick(playlist)} sx={{ marginRight: 1 }}>
-                  Посмотреть
-                </Button>
-                <Button variant="contained" color="secondary" onClick={() => handleDeletePlaylist(playlist.Playlist.playlist_id)}>
-                  Удалить
-                </Button>
-              </CardContent>
-            </Card>
-          </ListItem>
-        ))}
-      </List>
+      {playlists.length > 0 ? playlists.map((playlist) => (
+        <Card key={playlist.Playlist.playlist_id} sx={{ marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
+          <CardContent>
+            <Typography variant="h5" component="div" sx={{ marginBottom: 1, marginLeft: 1 }}>
+              {playlist.Playlist.label}
+            </Typography>
+            <CardActions>
+              <Button variant="outlined" size="small" onClick={() => handlePlaylistClick(playlist, false)} sx={{ marginRight: 1 }}>
+                Посмотреть
+              </Button>
+              <Button variant="outlined" size="small" color="error" onClick={() => handleDeletePlaylist(playlist.Playlist.playlist_id)}>
+                Удалить
+              </Button>
+            </CardActions>
+          </CardContent>
+        </Card>
+      )) : <Typography variant="h5" component="div" sx={{ marginBottom: 1, marginLeft: 1 }}>
+        Пусто
+      </Typography>}
+      <Divider sx={{ margin: '20px 0' }} />
+      <Typography variant="h4" marginBottom={'10px'}>Подписки</Typography>
+      {subscriptions.length > 0 ? subscriptions.map((subscription) => (
+        <Card key={subscription.Playlist.playlist_id} sx={{ marginBottom: 2, borderRadius: 2, boxShadow: 3 }}>
+          <CardContent>
+            <Typography variant="h5" component="div" sx={{ marginBottom: 1, marginLeft: 1 }}>
+              {subscription.Playlist.label}
+            </Typography>
+            <CardActions>
+              <Button variant="outlined" size="small" onClick={() => handlePlaylistClick(subscription, true)}sx={{ marginRight: 1 }}>
+                Посмотреть
+              </Button>
+              <Button variant="outlined" size="small" color="error" onClick={() => handleUnsubscribe(subscription.Playlist.playlist_id)}>
+                Отписаться
+              </Button>
+            </CardActions>
+          </CardContent>
+        </Card>
+      )) : <Typography variant="h5" component="div" sx={{ marginBottom: 1, marginLeft: 1 }}>
+        Пусто
+      </Typography>}
       <Dialog open={selectedPlaylist !== null} onClose={() => setSelectedPlaylist(null)}>
         <DialogTitle>{selectedPlaylist?.Playlist.label}</DialogTitle>
         <DialogContent>
           {playlistContent.length > 0 ? (
-            <Box>
+            <Box color={'#fafafa'}>
               {playlistContent.map((content) => (
-                <Box key={content.content_id} sx={{ marginBottom: 1, backgroundColor: '#f2f2f2', padding: 1}}>
-                  <Box>
+                <Card key={content.content_id} sx={{ marginBottom: 1, borderRadius: 2, boxShadow: 1, backgroundColor: "#f5f7f7", minWidth: "400px" }}>
+                  <CardContent>
                     <Typography>{content.label}</Typography>
-                  </Box>
-                  <Box>
-                    <Button variant="contained" component={Link} to={`/content/${content.content_id}`} sx={{ marginRight: 1, marginTop: 1 }}>Перейти</Button>
-                    <Button variant="contained" color="secondary" onClick={() => handleRemoveContent(selectedPlaylist.Playlist.playlist_id, content.content_id)} sx={{ marginTop: 1 }}>Убрать из плейлиста</Button>
-                  </Box>
-                </Box>
+                  </CardContent>
+                  <CardActions>
+                    <Button component={Link} size="small" to={`/content/${content.content_id}`} sx={{ marginRight: 1, marginTop: 1 }}>Перейти</Button>
+                    {!sub ? <Button size="small" color="error" onClick={() => handleRemoveContent(selectedPlaylist.Playlist.playlist_id, content.content_id)} sx={{ marginTop: 1 }}>Убрать из плейлиста</Button> : <Typography></Typography>}
+                  </CardActions>
+                </Card>
               ))}
             </Box>
           ) : (
@@ -168,7 +220,6 @@ const PlaylistManager = ({ url }) => {
           <Button onClick={() => setSelectedPlaylist(null)}>Закрыть</Button>
         </DialogActions>
       </Dialog>
-
     </Box>
   );
 };

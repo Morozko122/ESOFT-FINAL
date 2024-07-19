@@ -4,7 +4,17 @@ import App from './App';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    mode: 'light',
+    primary: {
+      main: '#00897b',
+    },
+    secondary: {
+      main: '#fbc02d',
+    },
+  }
+});
 
 ReactDOM.render(
   <React.StrictMode>

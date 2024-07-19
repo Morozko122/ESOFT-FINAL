@@ -38,8 +38,8 @@ const UserContent = ({ url }) => {
   };
 
   return (
-    <Box>
-      <Typography variant="h4">Мой контент</Typography>
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h4" marginBottom={'10px'}>Мой контент</Typography>
         {content.map((item) => (
           <Grid item key={item.content_id}>
             <MyContentCard content={item} handleDeleteContent={handleDeleteContent}/>

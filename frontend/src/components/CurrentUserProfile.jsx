@@ -28,7 +28,7 @@ const MyProfile = ({ url }) => {
   return (
     <Container maxWidth="lg">
       <Box sx={{ mt: 8 }}>
-        <Typography variant="h4">{currentUser.username}</Typography>
+      <Typography variant="h4" sx={{ mb: 2 }}>{currentUser.username}</Typography>
         <UserContentButton userId={user.user.userId} url={url} token={token}/>
       </Box>
     </Container>

@@ -14,13 +14,14 @@ import ProtectedRoute from './components/ProtectedRoute';
 import EditContentPage from './pages/EditContentPage';
 import UserProfilePage from './pages/UserProfilePage';
 import CurrentProfilePage from './pages/CurrentProfilePage';
+import './App.css';
 const API_BASE_URL = "http://localhost:3000/api";
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Header />
+        <Header url={API_BASE_URL} />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />

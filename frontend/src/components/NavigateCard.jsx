@@ -29,7 +29,7 @@ const NavigateContentCard = ({ sortBy, order }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    backgroundColor: '#1976d2',
+                    backgroundColor: '#fbc02d',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     cursor: 'pointer'

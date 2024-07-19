@@ -18,7 +18,7 @@ const FormInputs = ({ label, description, ratingId, error, onLabelChange, onDesc
     <Input type="file" onChange={onMediaFileChange} />
     <Input type="file" onChange={onPreviewFileChange} />
     {error && <Typography color="error">{error}</Typography>}
-    <Button type="submit" variant="contained" color="primary">Создать</Button>
+    <Button type="submit" variant="contained" color="primary">Изменить</Button>
   </Box>
 );
 

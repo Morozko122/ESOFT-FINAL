@@ -38,25 +38,29 @@ const ContentCarousel = ({ title, url, sortBy, order }) => {
     fetchContent();
   }, [url, page]);
 
-  function SampleNextArrow(props) {
+  function NextArrow(props) {
     const { className, style, onClick } = props;
     return (
       <div
         className={className}
-        style={{ ...style, display: "block", background: "black" }}
+        style={{ ...style, display: "block", fontSize: "20px", color: "black" }}
         onClick={onClick}
-      />
+      >
+        →
+      </div>
     );
   }
   
-  function SamplePrevArrow(props) {
+  function PrevArrow(props) {
     const { className, style, onClick } = props;
     return (
       <div
         className={className}
-        style={{ ...style, display: "block", background: "black" }}
+        style={{ ...style, display: "block", fontSize: "24px", color: "black" }}
         onClick={onClick}
-      />
+      >
+        ←
+      </div>
     );
   }
   const settings = {
@@ -98,8 +102,8 @@ const ContentCarousel = ({ title, url, sortBy, order }) => {
         }
       }
     ],
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />
   };
   if (loading && page === 1) {
     return <div>Загрузка...</div>;

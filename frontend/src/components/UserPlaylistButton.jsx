@@ -109,32 +109,28 @@ import { styled } from '@mui/system';
 import axios from 'axios';
 
 const StyledButton = styled(Button)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  padding: '8px 16px',
-  borderRadius: '20px',
-  backgroundColor: '#007bff',
-  '&:hover': {
-    backgroundColor: '#0056b3',
-  },
-});
-
-const StyledModal = styled(Modal)({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-});
-
-const Paper = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  boxShadow: theme.shadows[5],
-  padding: theme.spacing(2, 4, 3),
-  width: '80%',
-  maxWidth: '500px',
-  maxHeight: '80%',
-  overflowY: 'auto',
-}));
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: '8px 16px',
+    borderRadius: '4px',
+  });
+  
+  const StyledModal = styled(Modal)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  });
+  
+  const Paper = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+    width: '80%',
+    maxWidth: '500px',
+    maxHeight: '80%',
+    overflowY: 'auto',
+  }));
 
 const UserPlaylistButton = ({ userId, url, token }) => {
   const [open, setOpen] = useState(false);
@@ -206,7 +202,7 @@ const UserPlaylistButton = ({ userId, url, token }) => {
 
   return (
     <>
-      <StyledButton variant="contained" onClick={handleOpen}>
+      <StyledButton variant="contained" color='secondary' onClick={handleOpen}>
         <span>Плейлисты пользователя</span>
         <span>🎞️</span>
       </StyledButton>

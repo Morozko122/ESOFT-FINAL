@@ -55,6 +55,21 @@ class UserModel {
           throw error;
         }
       }
+    static async findUserByUsername(username){
+        try {
+            const user = await User.findOne({ where: { username: username }, attributes: ['user_id'] });
+            if (!user) {
+                throw new Error('Пользователь не найден');
+            }
+            return {
+              user: {
+                userId: user.user_id
+            }
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 module.exports = UserModel;

@@ -39,9 +39,10 @@ const ContentCard = ({ content }) => {
         }}
       >
         {!hover ? (
-          <Typography variant="h6" align="center" color={'white'}>{content.label}</Typography>
+          <Typography variant="body2"></Typography>
         ) : (
-          <Box>
+          <Box sx={{backdropFilter:'blur(5px)', backgroundColor: 'darkgray'}}>
+            <Typography variant="h6" align="center"> {content.label}</Typography>
             <Typography variant="body2">Описание: {content.description}</Typography>
             <Typography variant="body2">Тип: {content.type_id}</Typography>
             <Typography variant="body2">Рейтинг: {content.rating}</Typography>
