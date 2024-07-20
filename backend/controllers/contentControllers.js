@@ -26,7 +26,8 @@ class ContentController {
         content.type_id === 2 ? `${baseUrl}/uploads/videos/${content.path}` : 
         `${baseUrl}/uploads/others/${content.path}`;
         
-        const previewUrl = `${baseUrl}/uploads/previews/${content.path.replace(path.extname(content.path), '_preview' + path.extname(content.path))}`;
+        // const previewUrl = `${baseUrl}/uploads/previews/${content.path.replace(path.extname(content.path), '_preview' + path.extname(content.path))}`;
+        const previewUrl = `${baseUrl}/uploads/previews/${content.path.replace(path.extname(content.path), '_preview' + '.jpg')}`;
         return {
           ...content.toJSON(),
           mediaUrl,

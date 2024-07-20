@@ -41,7 +41,7 @@ class ContentService {
       const baseUrl = `${protocol}://${host}`;
       const modifiedContent = content.map(item => {
         const originalPathWithoutExt = path.basename(item.path, path.extname(item.path));
-        const previewPath = `${baseUrl}/uploads/previews/${originalPathWithoutExt}_preview.png`;
+        const previewPath = `${baseUrl}/uploads/previews/${originalPathWithoutExt}_preview.jpg`;
         return {
           ...item.toJSON(),
           previewPath
@@ -64,7 +64,7 @@ class ContentService {
         contentData.type_id = typeId;
       }
       const content = await this.contentModel.updateContent(contentId, userId, contentData);
-      await this.deleteFiles(content.content.ContentType.label, content.content.path);  
+      await this.deleteFiles(content.content.ContentType.label, content.originalPath);  
       return content.content;
     } catch (error) {
       throw error;

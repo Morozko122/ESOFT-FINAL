@@ -54,7 +54,7 @@ class ContentModel {
                 throw new Error('Content not found or not owned by user');
             }
             const originalPath = path.basename(content.path, path.extname(content.path));
-            const previewPath = `${originalPath}_preview.png`;
+            const previewPath = `${originalPath}_preview.jpg`;
             await content.update(contentData);
             return {
                 content,

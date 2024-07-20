@@ -78,7 +78,7 @@ const UserContentButton = ({ userId, url, token }) => {
           <List id="user-content-modal-description">
             {content.map((item) => (
               <ListItem key={item.id}>
-                <ListItemText primary={item.title} secondary={item.description} />
+                <ListItemText primary={item.label}/>
                 <Button onClick={()=>handleClick(item.content_id)}>Перейти</Button>
               </ListItem>
             ))}
